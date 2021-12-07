@@ -6,7 +6,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { logincall, registercall } from '../Apicalls'
 import { Authcontext } from '../contextApi/Authcontext'
 import { useHistory } from "react-router-dom";
-import { Redirect } from 'react-router'
 function Register() {
 
    const [email,setemail ]=useState('')
@@ -32,7 +31,12 @@ const login=async()=>{
 
 
 const register=async()=>{
-  registercall({email,password,name},dispatch)
+ await registercall({email,password,name},dispatch).then((res)=>{
+   if (res==true){
+    
+    loginshift()
+   }
+ })
 
 }
 console.log(user)

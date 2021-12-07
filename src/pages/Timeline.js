@@ -1,5 +1,6 @@
 import React, { useEffect, useState,useContext } from 'react'
 import './home.css'
+import axios from "axios";
 import MasonryImageList from '../components/Imagelist'
 import MiniDrawer from '../components/SideDrawer';
 import { Postcontext } from '../contextApi/PostContext';
@@ -9,26 +10,33 @@ import LabelBottomNavigation from '../components/BottomNav';
 
 
  
-function Home() {
-    const {posts,isFetching,error, dispatch}=useContext(Postcontext)
-   
-  const  getposts=async()=>{
+function Timeline() {
+    
+    const [postdata,setpostdata]=useState([])
 
-    getallposts(dispatch)
+  const  getposts=async()=>{
+      
+    try{
+        const response=await axios.get(`http://localhost:3000/api/post/timeline/all/619e9df303ddf270207ccbeb`)
+        console.log(response.data)
+        setpostdata(response.data)
+    }
+    catch(error){
+        console.log(error)
+    }
 
    }
-  console.log(posts)
+  
    
    useEffect(()=>{
        getposts()
-       console.log(localStorage.getItem('userid'))
    },[])
     return (
         <div >
             
             <MiniDrawer/>
             {
-                posts!=null?
+                postdata!=null?
                 <Container disableGutters={true} maxWidth={false} sx={{
                     background:'#252525' ,
                      paddingTop:{xs:'5rem',md:'8rem'},
@@ -36,7 +44,7 @@ function Home() {
                     
                      
                 }}>
-                        <MasonryImageList imagedata={posts} />
+                        <MasonryImageList imagedata={postdata} />
                 </Container>
            
            :null
@@ -49,4 +57,4 @@ function Home() {
     )
 }
 
-export default Home
+export default Timeline

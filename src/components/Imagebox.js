@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useContext, useEffect,useState } from 'react'
 import Box from '@mui/material/Box';
 import { makeStyles } from '@mui/styles';
 import { Chip, Container, Paper, Typography } from '@mui/material';
@@ -6,13 +6,48 @@ import AddIcon from '@mui/icons-material/Add';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import './images.css'
 import MasonryImageList from './Imagelist';
-export default function BoxSx(props) {
+import axios from "axios";
 
+export default function BoxSx(props) {
+    
+  const [liked,setliked]=useState('False')
+
+  const like=async()=>{
+    const userid=localStorage.getItem('userid')
+      const body = {
+          userId:userid, 
+      };
+      try {
+        const response=await axios.put(`http://localhost:3000/api/post/${props.data._id}/like`, body);
+        console.log(response.data)
+        
+      } catch (err) {
+        console.log(err)
+      }
+  }
+
+  const is_liked=async()=>{
+    const userid=await localStorage.getItem('userid')
+      const body = {
+          userId:userid, 
+      };
+      try {
+        const response=await axios.put(`http://localhost:3000/api/post/${props.data._id}/liked`, body);
+        console.log(response.data)
+        setliked(response.data)
+      } catch (err) {
+        console.log(err)
+      }
+  }
+
+  useEffect(()=>{
+   is_liked()
+},[props.data])
 
   return (
     <Box
       sx={{
-        width: {sm:800,xs:'100%'},
+        width: {sm:'auto',xs:'100%'},
         display:'flex',
         flexDirection:{xs:'column',sm:'row'},
         flexWrap:'true',
@@ -32,10 +67,12 @@ export default function BoxSx(props) {
       
       <Container
       disableGutters={true}
+
       sx={{
-         maxHeight: {xs:'auto',sm:'auto'},
-                maxWidth:{xs:'auto',md:'auto'},
+         maxHeight: {xs:'auto',sm:700},
+                maxWidth:{xs:'auto',md:700},
             overflow:'hidden',
+            
       }}
       >
         <Paper
@@ -44,7 +81,7 @@ export default function BoxSx(props) {
         backgroundColor: '#5727A3',
       }}
       >
-        <img src={props.data.img} className='cover'/>
+        <img src={`http://localhost:3000/images/${props.data.img}`} className='create-cover'/>
         </Paper>
       </Container>
       
@@ -66,7 +103,7 @@ export default function BoxSx(props) {
 
         }}
         >
-        <Typography variant="h3" sx={{color:'white'}}>
+        <Typography sx={{color:'white' , fontSize:{xs:20,sm:30}}}>
             {props.data.title}
         </Typography>
           </Paper>
@@ -74,14 +111,18 @@ export default function BoxSx(props) {
             {props.data.desc}
         </Typography>
         <Box sx={{  display: 'flex',
-          justifyContent: 'space-around', }}>
-        <Chip icon={<AddIcon/>} label="Follow" sx={{
+          justifyContent: 'flex-start', }}>
+        <Chip icon={<AddIcon style={{color: 'white'}}/>} label="Follow" sx={{
           backgroundColor: '#5727A3',
-          color:'white'
+          color:'white',
+          padding:1,
+          marginX:2,
         }} />
-         <Chip icon={<FavoriteBorderIcon/>} label="Like" sx={{
+         <Chip icon={<FavoriteBorderIcon style={ liked=='False'?{color: 'white'}:{color: 'red'}} onClick={()=>like()} />} label={liked=='False'? "Like":"Liked"} sx={{
           backgroundColor: '#5727A3',
-          color:'white'
+          color:'white',
+          padding:2,
+          marginX:2,
         }} />
           </Box>
        

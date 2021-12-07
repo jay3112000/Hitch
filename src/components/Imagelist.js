@@ -10,11 +10,15 @@ import './images.css'
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@mui/styles';
 import { Container } from '@mui/material';
-
-
+import EditIcon from '@mui/icons-material/Edit';
+import axios from "axios";
 
 export default function MasonryImageList(props) {
   
+  let admin=false
+  if (window.location.pathname=='/profile'){
+    admin=true
+  }
   var w = window.innerWidth;
   var h = window.innerHeight;
   let col=0
@@ -24,6 +28,20 @@ export default function MasonryImageList(props) {
   else{
      col=2
   }
+
+  const like=async()=>{
+    const userid=localStorage.getItem('userid')
+      const body = {
+          userId:userid, 
+      };
+      try {
+        await axios.post(`http://localhost:3000/api/${props.item.userId}/like`, body);
+      } catch (err) {
+        console.log(err)
+      }
+  }
+
+
   return (
     <Box sx={{ width: "100%", height: "auto", overflowY: 'scroll',paddingX:{xs:'0rem',sm:'2rem'} }}>
       <ImageList variant="masonry" cols={col} gap={10}>
@@ -33,7 +51,7 @@ export default function MasonryImageList(props) {
               <Link
               to={'/postpage/'+ item._id}
               >
-            <ImageListItem key={item.img}  sx={{
+            <ImageListItem key={item.id}  sx={{
               overflow:'hidden',
               borderRadius: 10 ,
               marginX:1
@@ -49,8 +67,8 @@ export default function MasonryImageList(props) {
             }
               > 
               <img
-                src={`${item.img}?w=248&fit=crop&auto=format`}
-                srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                src={`http://localhost:3000/images/${item.img}`}
+                srcSet={`http://localhost:3000/images/${item.img}`}
                 alt={item.title}
                 loading="lazy"
                 className='cover'
@@ -72,7 +90,10 @@ export default function MasonryImageList(props) {
                 sx={{ color: 'rgba(255, 255, 255, 0.54)',marginRight:10 }}
                 aria-label={`info about ${item.title}`}
               >
-                <FavoriteBorderIcon/>
+                {
+                  admin==true?<Link to={'/edit/'+ item._id}><EditIcon/></Link>:<FavoriteBorderIcon onClick={()=>like()} />
+                }
+                
               </IconButton>
             }
           />

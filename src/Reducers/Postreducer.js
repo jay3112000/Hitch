@@ -1,4 +1,4 @@
-import { FETCH_FAILURE, FETCH_POSTS, FETCH_SUCCESS } from "../Actions/Actions"
+import { FETCH_FAILURE, FETCH_POSTS, FETCH_SUCCESS  } from "../Actions/Actions"
 
 
 const Postreducer=(state,action)=>{
@@ -23,6 +23,8 @@ const Postreducer=(state,action)=>{
                  isFetching:false,
                  error:action.payload,
              }
+          
+         
         
          default:
              return state

@@ -21,6 +21,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import { makeStyles } from "@material-ui/core/styles";
 import ImageListItemBar from '@mui/material/ImageListItemBar';
+import TimelineIcon from '@mui/icons-material/Timeline';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import BorderAllIcon from '@mui/icons-material/BorderAll';
+import { useHistory } from "react-router-dom";
 import './sidedrawer.css'
 const drawerWidth = 200;
 const useStyles = makeStyles(theme => ({
@@ -124,11 +129,6 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 
-
-
-
-
-
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     width: drawerWidth,
@@ -152,6 +152,8 @@ export default function MiniDrawer() {
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
   const theme = useTheme();
+  let history=useHistory();
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -159,7 +161,21 @@ export default function MiniDrawer() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  
+  // 'Recent Posts', 'Timeline', 'Create', 'Profile']
+   const gotopage=(page)=>{
+     if(page=='Recent Posts'){
+       history.push('/home')
+     }
+     if(page=='Timeline'){
+      history.push('/timeline')
+    }
+    if(page=='Create'){
+      history.push('/create')
+    }
+    if(page=='Profile'){
+      history.push('/profile')
+    }
+   }
 
   return (
     <Box sx={{ display: 'flex' }} >
@@ -214,12 +230,12 @@ export default function MiniDrawer() {
         </DrawerHeader>
         <Divider />
         <List sx={{backgroundColor:"#252525"}}>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text} sx={{color:"white"}}>
+          {['Recent Posts', 'Timeline', 'Create', 'Profile'].map((text, index) => (
+            <ListItem button key={text} sx={{color:"white"}} >
               <ListItemIcon sx={{color:"white"}}>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                {text=='Recent Posts' ? <BorderAllIcon/> : text=='Timeline'? <TimelineIcon/> :text=='Create'? <AddCircleIcon/>:text=='Profile'?<AccountCircleIcon/>:null}
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary={text} onClick={()=>{gotopage(text)}} />
             </ListItem>
           ))}
         </List>

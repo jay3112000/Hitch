@@ -4,12 +4,16 @@ import './index.css';
 import App from './App';
 import {Authcontextprovider} from './contextApi/Authcontext'
 import { Postcontextprovider } from './contextApi/PostContext';
+import { CEPostcontextprovider } from './contextApi/CreateEditPostcontext';
 
 ReactDOM.render(
   <React.StrictMode>
     <Authcontextprovider>
       <Postcontextprovider>
-    <App/>
+        <CEPostcontextprovider>
+          
+          <App/>
+    </CEPostcontextprovider>
     </Postcontextprovider>
     </Authcontextprovider>
     

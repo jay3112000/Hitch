@@ -1,34 +1,48 @@
 import React, { useEffect, useState,useContext } from 'react'
 import './home.css'
+import axios from "axios";
 import MasonryImageList from '../components/Imagelist'
 import MiniDrawer from '../components/SideDrawer';
 import { Postcontext } from '../contextApi/PostContext';
 import { getallposts } from '../Apicalls';
 import { Container } from '@mui/material';
 import LabelBottomNavigation from '../components/BottomNav';
+import { makeStyles } from '@mui/styles';
 
+const useStyles = makeStyles({
+    wall:{
+        background:'#252525',
+        height: 700 ,
+    },
+  });
 
- 
-function Home() {
-    const {posts,isFetching,error, dispatch}=useContext(Postcontext)
-   
+function Profile() {
+    
+    const [postdata,setpostdata]=useState([])
+    const classes = useStyles();
   const  getposts=async()=>{
-
-    getallposts(dispatch)
+      const id=localStorage.getItem('userid')
+    try{
+        const response=await axios.get(`http://localhost:3000/api/post/myposts/all/${id}`)
+        console.log(response.data)
+        setpostdata(response.data)
+    }
+    catch(error){
+        console.log(error)
+    }
 
    }
-  console.log(posts)
+  
    
    useEffect(()=>{
        getposts()
-       console.log(localStorage.getItem('userid'))
    },[])
     return (
-        <div >
+        <div  className={classes.wall}>
             
             <MiniDrawer/>
             {
-                posts!=null?
+                postdata!=null?
                 <Container disableGutters={true} maxWidth={false} sx={{
                     background:'#252525' ,
                      paddingTop:{xs:'5rem',md:'8rem'},
@@ -36,7 +50,7 @@ function Home() {
                     
                      
                 }}>
-                        <MasonryImageList imagedata={posts} />
+                        <MasonryImageList imagedata={postdata} />
                 </Container>
            
            :null
@@ -49,4 +63,4 @@ function Home() {
     )
 }
 
-export default Home
+export default Profile

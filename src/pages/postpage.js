@@ -9,6 +9,7 @@ import { Container } from '@mui/material';
 import { getallposts } from '../Apicalls';
 import MasonryImageList from '../components/Imagelist'
 import { Postcontext } from '../contextApi/PostContext';
+import LabelBottomNavigation from '../components/BottomNav';
 const useStyles = makeStyles({
     wall:{
         background:'#252525',
@@ -38,14 +39,15 @@ const Postpage=()=> {
             console.log(error)
         }
     }
-
+   
+    
     
    
 
     useEffect(()=>{
          getpost()
          getaposts2()
-    },[])
+    },[id])
     return (
         <div className={classes.wall}>
            <MiniDrawer/>
@@ -71,7 +73,7 @@ const Postpage=()=> {
            
            :null
             }
-           
+           <LabelBottomNavigation/>
         </div>
         
     )
